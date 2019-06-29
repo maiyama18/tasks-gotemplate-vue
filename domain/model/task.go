@@ -5,3 +5,7 @@ type Task struct {
 	Title     string
 	Completed bool
 }
+
+func (t *Task) Complete() {
+	t.Completed = true
+}
