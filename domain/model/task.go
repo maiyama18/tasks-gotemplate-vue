@@ -9,3 +9,8 @@ type Task struct {
 func (t *Task) Complete() {
 	t.Completed = true
 }
+
+func (t *Task) UpdateAttributes(newTask *Task) {
+	t.Title = newTask.Title
+	t.Completed = newTask.Completed
+}

@@ -11,6 +11,10 @@ type TaskUsecase struct {
 	taskRepository repository.TaskRepository
 }
 
+func NewTaskUsecase(taskRepository repository.TaskRepository) *TaskUsecase {
+	return &TaskUsecase{taskRepository: taskRepository}
+}
+
 func (t *TaskUsecase) FindAll() ([]*model.Task, error) {
 	return t.taskRepository.FindAll()
 }
