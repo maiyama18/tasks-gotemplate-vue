@@ -29,3 +29,17 @@ func (t *TaskHandler) Index(c *gin.Context) {
 		"tasks": tasks,
 	})
 }
+
+func (t *TaskHandler) AddTask(c *gin.Context) {
+	var addTaskRequest AddTaskRequest
+	if err := c.BindJSON(&addTaskRequest); err != nil {
+		c.JSON(http.StatusBadRequest, ErrorResponse{Message: err.Error()})
+	}
+
+	task, err := t.taskUsecase.Add(addTaskRequest.Title)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, ErrorResponse{Message: err.Error()})
+	}
+
+	c.JSON(http.StatusOK, TaskResponse{Task: *task})
+}

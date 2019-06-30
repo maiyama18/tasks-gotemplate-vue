@@ -14,6 +14,8 @@ func Run() error {
 
 	r.GET("/", taskHandler.Index)
 
+	r.POST("/api/tasks/new", taskHandler.AddTask)
+
 	if err := r.Run(":8080"); err != nil {
 		return err
 	}

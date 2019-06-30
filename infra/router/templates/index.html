@@ -7,6 +7,10 @@
 <body>
 
 <div id="app">
+    <form @submit.prevent="createTask">
+        <input type="text" v-model="newTaskTitle">
+        <button :disabled="!canSubmit">add</button>
+    </form>
     <ul>
         <li v-for="task in tasks">[[ task.Title ]]</li>
     </ul>
@@ -19,8 +23,31 @@
         delimiters: ['[[', ']]'],
         data: {
             tasks: {{.tasks}},
-            newTask: '',
+            newTaskTitle: '',
         },
+        computed: {
+            canSubmit: function() {
+                return this.newTaskTitle.length > 0
+            },
+        },
+        methods: {
+            createTask: function(_e) {
+                fetch('/api/tasks/new', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        title: this.newTaskTitle,
+                    }),
+                })
+                    .then(resp => resp.json())
+                    .then(({ task }) => {
+                        this.tasks = [...this.tasks, task]
+                    })
+                    .catch(err => console.error(err))
+            }
+        }
     })
 </script>
 </body>

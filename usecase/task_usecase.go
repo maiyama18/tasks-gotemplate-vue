@@ -19,18 +19,19 @@ func (t *TaskUsecase) FindAll() ([]*model.Task, error) {
 	return t.taskRepository.FindAll()
 }
 
-func (t *TaskUsecase) Add(task *model.Task) error {
+func (t *TaskUsecase) Add(title string) (*model.Task, error) {
+	task := &model.Task{Title: title, Completed: false}
 	return t.taskRepository.Create(task)
 }
 
-func (t *TaskUsecase) Complete(id uint64) error {
+func (t *TaskUsecase) Complete(id uint64) (*model.Task, error) {
 	task, err := t.taskRepository.Find(id)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if task.Completed {
-		return fmt.Errorf("task with id %d is already completed", id)
+		return nil, fmt.Errorf("task with id %d is already completed", id)
 	}
 
 	task.Complete()

@@ -36,20 +36,20 @@ func (t *TaskInMemoryDatabase) FindAll() ([]*model.Task, error) {
 	return t.tasks, nil
 }
 
-func (t *TaskInMemoryDatabase) Create(task *model.Task) error {
+func (t *TaskInMemoryDatabase) Create(task *model.Task) (*model.Task, error) {
 	task.ID = t.nextID
 	t.nextID++
 
 	t.tasks = append(t.tasks, task)
-	return nil
+	return task, nil
 }
 
-func (t *TaskInMemoryDatabase) Update(task *model.Task) error {
+func (t *TaskInMemoryDatabase) Update(task *model.Task) (*model.Task, error) {
 	for _, t := range t.tasks {
 		if t.ID == task.ID {
 			t.UpdateAttributes(task)
-			return nil
+			return t, nil
 		}
 	}
-	return fmt.Errorf("task with id %d not found", task.ID)
+	return nil, fmt.Errorf("task with id %d not found", task.ID)
 }
