@@ -14,9 +14,14 @@
     <ul>
         <li
             v-for="task in filteredTasks"
-            :style="{ 'text-decoration': task.completed ? 'line-through' : 'none' }"
-            @click="toggleTask($event, task.id)"
-        >[[ task.title ]]</li>
+        >
+            <span
+                :style="{ 'text-decoration': task.completed ? 'line-through' : 'none' }"
+                @click="toggleTask($event, task.id)"
+            >
+                [[ task.title ]]
+            </span>
+        </li>
     </ul>
     <ul>
         <li
