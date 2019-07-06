@@ -57,7 +57,7 @@
                     .catch(err => alert(`failure: ${err}`))
             },
             toggleTask: function(_e, id)  {
-                fetch(`/api/tasks/complete/${id}`, {
+                fetch(`/api/tasks/toggle/${id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
