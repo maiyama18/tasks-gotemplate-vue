@@ -64,3 +64,17 @@ func (t *TaskHandler) ToggleTask(c *gin.Context) {
 
 	c.JSON(http.StatusOK, NewTaskResponse(task))
 }
+
+func (t *TaskHandler) DeleteTask(c *gin.Context) {
+	idStr := c.Param("id")
+	id, err := strconv.ParseUint(idStr, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, NewErrorResponse(err.Error()))
+	}
+
+	if err := t.taskUsecase.Delete(id); err != nil {
+		c.JSON(http.StatusInternalServerError, NewErrorResponse(err.Error()))
+	}
+
+	c.JSON(http.StatusOK, struct{}{})
+}

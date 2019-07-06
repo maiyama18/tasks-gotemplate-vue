@@ -16,6 +16,7 @@ func Run() error {
 
 	r.POST("/api/tasks/new", taskHandler.AddTask)
 	r.PUT("/api/tasks/toggle/:id", taskHandler.ToggleTask)
+	r.DELETE("/api/tasks/delete/:id", taskHandler.DeleteTask)
 
 	if err := r.Run(":8080"); err != nil {
 		return err

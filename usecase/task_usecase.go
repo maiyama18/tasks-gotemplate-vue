@@ -31,3 +31,7 @@ func (t *TaskUsecase) Toggle(id uint64) (*model.Task, error) {
 	task.Toggle()
 	return t.taskRepository.Update(task)
 }
+
+func (t *TaskUsecase) Delete(id uint64) error {
+	return t.taskRepository.Delete(id)
+}

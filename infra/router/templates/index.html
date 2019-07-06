@@ -21,6 +21,9 @@
             >
                 [[ task.title ]]
             </span>
+            <button @click="deleteTask($event, task.id)">
+                x
+            </button>
         </li>
     </ul>
     <ul>
@@ -97,6 +100,20 @@
                     .then(task => {
                         this.tasks = this.tasks.map(t => t.id === task.id ? task : t)
                     })
+                    .then(() => alert('success'))
+                    .catch(err => alert(`failure: ${err}`))
+            },
+            deleteTask: function(_e, id)  {
+                fetch(`/api/tasks/delete/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                    .then(resp => {
+                        if (resp.status !== 200) throw new Error(resp.json().message)
+                    })
+                    .then(() => this.tasks = this.tasks.filter(t => t.id !== id))
                     .then(() => alert('success'))
                     .catch(err => alert(`failure: ${err}`))
             },

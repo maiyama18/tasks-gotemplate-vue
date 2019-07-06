@@ -54,3 +54,22 @@ func (t *TaskInMemoryDatabase) Update(task *model.Task) (*model.Task, error) {
 	}
 	return nil, fmt.Errorf("task with id %d not found", task.ID)
 }
+
+func (t *TaskInMemoryDatabase) Delete(id uint64) error {
+	_, err := t.Find(id)
+	if err != nil {
+		return err
+	}
+
+	var updatedTasks []*model.Task
+	for _, t := range t.tasks {
+		if t.ID == id {
+			continue
+		}
+
+		updatedTasks = append(updatedTasks, t)
+	}
+	t.tasks = updatedTasks
+
+	return nil
+}
