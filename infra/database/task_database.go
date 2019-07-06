@@ -47,7 +47,8 @@ func (t *TaskInMemoryDatabase) Create(task *model.Task) (*model.Task, error) {
 func (t *TaskInMemoryDatabase) Update(task *model.Task) (*model.Task, error) {
 	for _, t := range t.tasks {
 		if t.ID == task.ID {
-			t.UpdateAttributes(task)
+			t.Title = task.Title
+			t.Completed = task.Completed
 			return t, nil
 		}
 	}

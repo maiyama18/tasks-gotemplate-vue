@@ -12,7 +12,11 @@
         <button :disabled="!canSubmit">add</button>
     </form>
     <ul>
-        <li v-for="task in tasks">[[ task.Title ]]</li>
+        <li
+            v-for="task in tasks"
+            :style="{ 'text-decoration': task.completed ? 'line-through' : 'none' }"
+            @click="toggleTask($event, task.id)"
+        >[[ task.title ]]</li>
     </ul>
 </div>
 
@@ -41,11 +45,29 @@
                         title: this.newTaskTitle,
                     }),
                 })
-                    .then(resp => resp.json())
-                    .then(({ task }) => {
-                        this.tasks = [...this.tasks, task]
+                    .then(resp => {
+                        if (resp.status !== 200) throw new Error(resp.json().message)
+                        return resp.json()
                     })
-                    .catch(err => console.error(err))
+                    .then(task => {
+                        this.tasks = [...this.tasks, task]
+                        this.newTaskTitle = ''
+                    })
+                    .then(() => alert('success'))
+                    .catch(err => alert(`failure: ${err}`))
+            },
+            toggleTask: function(_e, id)  {
+                fetch(`/api/tasks/complete/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                    .then(resp => {
+                        if (resp.status !== 200) throw new Error(resp.json().message)
+                    })
+                    .then(() => alert('success'))
+                    .catch(err => alert(`failure: ${err}`))
             }
         }
     })

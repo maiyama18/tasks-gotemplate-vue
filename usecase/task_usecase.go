@@ -1,8 +1,6 @@
 package usecase
 
 import (
-	"fmt"
-
 	"github.com/maiyama18/tasks-gotemplate-vue/domain/model"
 	"github.com/maiyama18/tasks-gotemplate-vue/domain/repository"
 )
@@ -24,16 +22,12 @@ func (t *TaskUsecase) Add(title string) (*model.Task, error) {
 	return t.taskRepository.Create(task)
 }
 
-func (t *TaskUsecase) Complete(id uint64) (*model.Task, error) {
+func (t *TaskUsecase) Toggle(id uint64) (*model.Task, error) {
 	task, err := t.taskRepository.Find(id)
 	if err != nil {
 		return nil, err
 	}
 
-	if task.Completed {
-		return nil, fmt.Errorf("task with id %d is already completed", id)
-	}
-
-	task.Complete()
+	task.Toggle()
 	return t.taskRepository.Update(task)
 }

@@ -25,21 +25,26 @@ func (t *TaskHandler) Index(c *gin.Context) {
 		return
 	}
 
+	var taskResponses []*TaskResponse
+	for _, t := range tasks {
+		taskResponses = append(taskResponses, NewTaskResponse(t))
+	}
+
 	c.HTML(http.StatusOK, "index.html", gin.H{
-		"tasks": tasks,
+		"tasks": taskResponses,
 	})
 }
 
 func (t *TaskHandler) AddTask(c *gin.Context) {
 	var addTaskRequest AddTaskRequest
 	if err := c.BindJSON(&addTaskRequest); err != nil {
-		c.JSON(http.StatusBadRequest, ErrorResponse{Message: err.Error()})
+		c.JSON(http.StatusBadRequest, NewErrorResponse(err.Error()))
 	}
 
 	task, err := t.taskUsecase.Add(addTaskRequest.Title)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, ErrorResponse{Message: err.Error()})
+		c.JSON(http.StatusInternalServerError, NewErrorResponse(err.Error()))
 	}
 
-	c.JSON(http.StatusOK, TaskResponse{Task: *task})
+	c.JSON(http.StatusOK, NewTaskResponse(task))
 }
