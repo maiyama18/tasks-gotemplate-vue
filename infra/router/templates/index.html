@@ -65,6 +65,10 @@
                 })
                     .then(resp => {
                         if (resp.status !== 200) throw new Error(resp.json().message)
+                        return resp.json()
+                    })
+                    .then(task => {
+                        this.tasks = this.tasks.map(t => t.id === task.id ? task : t)
                     })
                     .then(() => alert('success'))
                     .catch(err => alert(`failure: ${err}`))

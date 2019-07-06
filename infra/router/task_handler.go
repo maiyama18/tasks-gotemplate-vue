@@ -2,6 +2,7 @@ package router
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/maiyama18/tasks-gotemplate-vue/domain/repository"
 
@@ -42,6 +43,21 @@ func (t *TaskHandler) AddTask(c *gin.Context) {
 	}
 
 	task, err := t.taskUsecase.Add(addTaskRequest.Title)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, NewErrorResponse(err.Error()))
+	}
+
+	c.JSON(http.StatusOK, NewTaskResponse(task))
+}
+
+func (t *TaskHandler) ToggleTask(c *gin.Context) {
+	idStr := c.Param("id")
+	id, err := strconv.ParseUint(idStr, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, NewErrorResponse(err.Error()))
+	}
+
+	task, err := t.taskUsecase.Toggle(id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, NewErrorResponse(err.Error()))
 	}
