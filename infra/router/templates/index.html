@@ -13,10 +13,19 @@
     </form>
     <ul>
         <li
-            v-for="task in tasks"
+            v-for="task in filteredTasks"
             :style="{ 'text-decoration': task.completed ? 'line-through' : 'none' }"
             @click="toggleTask($event, task.id)"
         >[[ task.title ]]</li>
+    </ul>
+    <ul>
+        <li
+            v-for="filter in filters"
+            :style="{ 'color': filter === currentFilter ? 'red' : 'black' }"
+            @click="changeFilter($event, filter)"
+        >
+            [[ filter ]]
+        </li>
     </ul>
 </div>
 
@@ -28,11 +37,24 @@
         data: {
             tasks: {{.tasks}},
             newTaskTitle: '',
+            filters: ['all', 'completed', 'uncompleted'],
+            currentFilter: 'all',
         },
         computed: {
             canSubmit: function() {
                 return this.newTaskTitle.length > 0
             },
+            filteredTasks: function() {
+                switch (this.currentFilter) {
+                    case 'completed':
+                        return this.tasks.filter(t => t.completed);
+                    case 'uncompleted':
+                        return this.tasks.filter(t => !t.completed);
+                    case 'all':
+                    default:
+                        return this.tasks
+                }
+            }
         },
         methods: {
             createTask: function(_e) {
@@ -72,6 +94,9 @@
                     })
                     .then(() => alert('success'))
                     .catch(err => alert(`failure: ${err}`))
+            },
+            changeFilter: function(_e, nextFilter) {
+                this.currentFilter = nextFilter
             }
         }
     })
